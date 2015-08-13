@@ -1,8 +1,12 @@
 {
   "name": "SmartSidebar",
-  "version": "1.0.7",
+  "version": "0.0.1",
   "homepage": "https://github.com/yaplas/smart-sidebar",
   "description": "jQuery plugin used to convert an element in a sidebar that follow the scroll in a smart way, even when sidebar is higher than viewport",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/yaplas/smart-sidebar.git"
+  },
   "main": "jquery-smart-sidebar.js",
   "dependencies": {
     "jquery": ">=1.6"
@@ -11,6 +15,9 @@
     "jQuery", "scroll", "fixed", "sidebar", "affix", "higher", "viewport", "large sidebar", "vertical scroll"
   ],
   "license": "MIT",
+  "authors": [
+    { "name": "Agustin Lascialandare", "email": "lascialandare@gmail.com" }
+  ],
   "ignore": [
     "**/.*",
     "bower_components",
