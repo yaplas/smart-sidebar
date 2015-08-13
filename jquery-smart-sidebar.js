@@ -23,7 +23,7 @@
         var $rail = $(
             '<div class="' + 
             (options.railClass || 'rail') +
-            '-fixed-top" style="overflow:hidden;position:fixed;padding:1px;">' +
+            '-fixed-top" style="overflow:hidden;position:fixed;padding:1px;bottom:0;">' +
             '<div class="top-offset"></div>' +
             '</div>');
 
