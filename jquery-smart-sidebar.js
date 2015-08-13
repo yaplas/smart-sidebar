@@ -16,26 +16,26 @@
 
         var $elem = $(elem);
         $elem.data('SmartSidebar', true);
-       
 
         var offset = $elem.offset();
         var height = $elem.height();
 
         var $rail = $(
             '<div class="' + 
-            (options.railClass || 'fixed-rail') + 
-            '" style="overflow:hidden;position:fixed;padding:1px;"><div class="top-offset"></div></div>');
+            (options.railClass || 'rail') +
+            '-fixed-top" style="overflow:hidden;position:fixed;padding:1px;">' +
+            '<div class="top-offset"></div>' +
+            '</div>');
 
         $rail.css({left: offset.left+'px'});
-        if (!isNaN(options.top)) {
-            $rail.css({top: options.top +'px'});
-        }
-        if (!isNaN(options.bottom)) {
-            $rail.css({bottom: options.bottom +'px'});
-        }
         
         $elem.before($rail);
         $rail.append($elem);
+        $rail.append(
+          '<div class="' +
+          (options.railClass || 'rail') +
+          '-fixed-bottom-height"></div>'
+        );
 
         var $window = $(window);
         var lastScrollTop = $window.scrollTop();
