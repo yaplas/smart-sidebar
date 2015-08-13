@@ -12,16 +12,31 @@
     "jquery": ">=1.6"
   },
   "keywords": [
-    "jQuery", "scroll", "fixed", "sidebar", "affix", "higher", "viewport", "large sidebar", "vertical scroll"
+    "jQuery",
+    "scroll",
+    "fixed",
+    "sidebar",
+    "affix",
+    "higher",
+    "viewport",
+    "large",
+    "sidebar",
+    "vertical",
+    "scroll"
   ],
   "license": "MIT",
   "authors": [
-    { "name": "Agustin Lascialandare", "email": "lascialandare@gmail.com" }
+    "[object Object]"
   ],
   "ignore": [
     "**/.*",
     "bower_components",
     "tests",
-    "test*.html"
+    "test*.html",
+    "node_modules",
+    "test"
+  ],
+  "moduleType": [
+    "globals"
   ]
 }
