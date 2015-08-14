@@ -75,10 +75,10 @@
 
       if (mustBottomOffsetBeHidden) {
         $bottomOffset.hide();
-        $bottomGap.css({ height: ($rail.height() - $elem.height()) + 'px' });
+        $bottomGap.css({ height: ($rail.height() - $elem.outerHeight(true)) + 'px' });
       } else {
         $bottomOffset.show();
-        $bottomGap.css({ height: ($rail.height() - $elem.height() - bottomOffsetHeight) + 'px' });
+        $bottomGap.css({ height: ($rail.height() - $elem.outerHeight(true) - bottomOffsetHeight) + 'px' });
       }
 
       $rail.scrollTop(scroll);

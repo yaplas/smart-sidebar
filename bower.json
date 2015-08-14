@@ -9,7 +9,7 @@
   },
   "main": "jquery-smart-sidebar.js",
   "dependencies": {
-    "jquery": ">=1.6"
+    "jquery": ">=1.8"
   },
   "keywords": [
     "jQuery",
