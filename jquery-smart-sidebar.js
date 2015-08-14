@@ -31,18 +31,21 @@
       '<div class="top-offset"></div>' +
       '</div>');
 
-    var $bottomOffset = $('<div class="bottom-offset"></div>');
+    var $bottomOffset = $('<div class="bottom-offset" style="margin:0;padding:0;"></div>');
+    var $bottomGap = $('<div class="bottom-gap" style="margin:0;padding:0;"></div>');
 
     $rail.css({left: offset.left+'px'});
 
     $elem.before($rail);
     $rail.append($elem);
     $rail.append($bottomOffset);
+    $rail.append($bottomGap);
 
     var $window = $(window);
     var $body = $(window.document.body);
     var topOffsetHeight = Math.max(offset.top - $rail.offset().top - $window.scrollTop(), 0);
     $rail.find('.top-offset').css({ height: topOffsetHeight + 'px' });
+
 
     $window.on('scroll', scrollHandler);
 
@@ -54,14 +57,9 @@
       }
       scrollHandler.lastScrollTop = scrollHandler.lastScrollTop || 0;
       var bottomOffsetHeight = $bottomOffset.height();
-      var bodyHeight = $body.height();
-      var windowHeight = $window.height();
-      var railScrollHeight = $rail[0].scrollHeight;
-      var railHeight = $rail.height();
       var scrollTop = $window.scrollTop();
       var diff = scrollTop - scrollHandler.lastScrollTop;
-      var railScrollTop = $rail.scrollTop();
-      var scroll = railScrollTop + diff;
+      var scroll = $rail.scrollTop() + diff;
       scrollHandler.lastScrollTop = scrollTop;
 
       if (scroll < topOffsetHeight) {
@@ -72,11 +70,17 @@
         }
       }
 
-      if (!options.saveBottomOffset && railScrollHeight - railHeight - scroll < bottomOffsetHeight) {
-        if (bodyHeight - windowHeight - scrollTop > bottomOffsetHeight) {
-          scroll = railScrollHeight - railHeight - bottomOffsetHeight;
-        }
+      var mustBottomOffsetBeHidden = !options.saveBottomOffset &&
+        $body.height() - $window.height() - scrollTop > bottomOffsetHeight;
+
+      if (mustBottomOffsetBeHidden) {
+        $bottomOffset.hide();
+        $bottomGap.css({ height: ($rail.height() - $elem.height()) + 'px' });
+      } else {
+        $bottomOffset.show();
+        $bottomGap.css({ height: ($rail.height() - $elem.height() - bottomOffsetHeight) + 'px' });
       }
+
       $rail.scrollTop(scroll);
     }
 
