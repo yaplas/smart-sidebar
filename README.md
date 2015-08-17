@@ -12,7 +12,7 @@ You need to call the `smartSidebar` method over the element that you want to bec
 $('#your-sidebar-element').smartSidebar();
 ```
 
-#You can define the position by css:
+###You can define the position by css:
 
 If the site header is always visible and the footer appear just at the end of scroll:
 
