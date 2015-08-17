@@ -8,7 +8,7 @@ Usage
 =========================
 You need to call the `smartSidebar` method over the element that you want to became your sidebar.
 
-js```
+```js
 $('#your-sidebar-element').smartSidebar();
 ```
 
@@ -16,7 +16,7 @@ $('#your-sidebar-element').smartSidebar();
 
 If the site header is always visible and the footer appear just at the end of scroll:
 
-css```
+```css
     .sidebar-rail {
       top: 80px; // header height
     }
@@ -27,7 +27,7 @@ css```
 
 If the header and footer is always visible: 
 
-css```
+```css
     .sidebar-rail {
       top: 80px; // header height
       bottom: 120px; // footer height
