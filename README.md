@@ -25,7 +25,7 @@ If the site header is always visible and the footer appear just at the end of sc
     }
 ```
 
-If the header and footer is always visible: 
+If the header and footer are always visibles: 
 
 ```css
     .sidebar-rail {
