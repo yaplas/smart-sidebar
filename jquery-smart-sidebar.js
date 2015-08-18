@@ -27,29 +27,30 @@
 
     var $rail = $(
       '<div id="' + railId +
-      '" class="' + options.railClass + '" style="overflow:hidden;position:fixed;padding:1px;bottom:0;">' +
-      '<div class="top-offset"></div>' +
-      '</div>');
+      '" class="' + options.railClass + '" style="overflow:hidden;position:fixed;padding:1px;bottom:0;"></div>');
 
+    var $topOffset = $('<div class="top-offset" style="margin:0;padding:0;"></div>');
     var $bottomOffset = $('<div class="bottom-offset" style="margin:0;padding:0;"></div>');
     var $bottomGap = $('<div class="bottom-gap" style="margin:0;padding:0;"></div>');
 
     $rail.css({left: offset.left+'px'});
 
     $elem.before($rail);
+
+    var topOffsetHeight = Math.max(offset.top - parseInt($rail.css('top')), 0);
+    $topOffset.css({ height: topOffsetHeight + 'px' });
+
+    $rail.append($topOffset);
     $rail.append($elem);
     $rail.append($bottomOffset);
     $rail.append($bottomGap);
 
     var $window = $(window);
     var $body = $(window.document.body);
-    var topOffsetHeight = Math.max(offset.top - $rail.offset().top - $window.scrollTop(), 0);
-    $rail.find('.top-offset').css({ height: topOffsetHeight + 'px' });
-
-
-    $window.on('scroll', scrollHandler);
 
     waitForContent(200);
+
+    $window.on('scroll', scrollHandler);
 
     function scrollHandler(){
       if (!exists()) {
@@ -61,6 +62,7 @@
       var diff = scrollTop - scrollHandler.lastScrollTop;
       var scroll = $rail.scrollTop() + diff;
       scrollHandler.lastScrollTop = scrollTop;
+
 
       if (scroll < topOffsetHeight) {
         if (scrollTop < topOffsetHeight) {
