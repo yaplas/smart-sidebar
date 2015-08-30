@@ -18,39 +18,52 @@
     options.railClass = options.railClass || 'sidebar-rail';
     options.saveBottomOffset = !!options.saveBottomOffset;
 
-    var $elem = $(elem);
-    $elem.data('SmartSidebar', true);
-
-    var offset = $elem.offset();
-
-    var railId = 'ssr' + (++count);
-
-    var $rail = $(
-      '<div id="' + railId +
-      '" class="' + options.railClass + '" style="overflow:hidden;position:fixed;padding:1px;bottom:0;"></div>');
-
-    var $topOffset = $('<div class="top-offset" style="margin:0;padding:0;"></div>');
-    var $bottomOffset = $('<div class="bottom-offset" style="margin:0;padding:0;"></div>');
-    var $bottomGap = $('<div class="bottom-gap" style="margin:0;padding:0;"></div>');
-
-    $rail.css({left: offset.left+'px'});
-
-    $elem.before($rail);
-
-    var topOffsetHeight = Math.max(offset.top - parseInt($rail.css('top')), 0);
-    $topOffset.css({ height: topOffsetHeight + 'px' });
-
-    $rail.append($topOffset);
-    $rail.append($elem);
-    $rail.append($bottomOffset);
-    $rail.append($bottomGap);
-
     var $window = $(window);
     var $body = $(window.document.body);
+    var $elem = $(elem);
+    $elem.data('SmartSidebar', true);
+    var railId = 'ssr' + (++count);
+
+    var offset, $rail, $topOffset, $bottomOffset, $bottomGap, topOffsetHeight;
+
+    mount();
 
     waitForContent(200);
 
     $window.on('scroll', scrollHandler);
+    $window.on('resize', debounce(function(){
+      unmount();
+      mount();
+      waitForContent(1);
+    }, 500));
+
+    function mount() {
+      offset = $elem.offset();
+
+      $rail = $(
+        '<div id="' + railId +
+        '" class="' + options.railClass + '" style="overflow:hidden;position:fixed;padding:1px;bottom:0;"></div>');
+
+      $topOffset = $('<div class="top-offset" style="margin:0;padding:0;"></div>');
+      $bottomOffset = $('<div class="bottom-offset" style="margin:0;padding:0;"></div>');
+      $bottomGap = $('<div class="bottom-gap" style="margin:0;padding:0;"></div>');
+
+      $rail.css({left: offset.left+'px'});
+
+      $elem.before($rail);
+
+      topOffsetHeight = Math.max(offset.top - parseInt($rail.css('top')), 0);
+      $topOffset.css({ height: topOffsetHeight + 'px' });
+
+      $rail.append($topOffset);
+      $rail.append($elem);
+      $rail.append($bottomOffset);
+      $rail.append($bottomGap);
+    }
+
+    function unmount() {
+      $rail.replaceWith($elem);
+    }
 
     function scrollHandler(){
       if (!exists()) {
@@ -96,6 +109,26 @@
 
     function exists() {
       return $('#'+railId).length;
+    }
+
+    function debounce(func, milliseconds) {
+      var args, self, debouncing=0;
+      return function() {
+        debouncing++;
+        args = Array.prototype.slice.call(arguments);
+        self = this;
+        if (debouncing===1) {
+          executeFunc(0);
+        }
+      };
+      function executeFunc(current) {
+        if(current===debouncing) {
+          func.apply(self, args);
+          debouncing=0;
+        } else {
+          setTimeout(function(){ executeFunc(debouncing); }, milliseconds);
+        }
+      }
     }
   };
 
