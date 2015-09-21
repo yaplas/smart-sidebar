@@ -15,7 +15,7 @@
   $.SmartSidebar = function(elem, options) {
 
     options = options || {};
-    options.railClass = options.railClass || 'sidebar-rail';
+    options.railClass = (options.railClass ? options.railClass + ' ' : '') + 'sidebar-rail';
     options.saveBottomOffset = !!options.saveBottomOffset;
 
     var $window = $(window);
