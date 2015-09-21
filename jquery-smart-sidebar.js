@@ -21,7 +21,7 @@
     var $window = $(window);
     var $body = $(window.document.body);
     var $elem = $(elem);
-    $elem.data('SmartSidebar', true);
+    $elem.data('SmartSidebar', true).css({'pointer-events':'all'});
     var railId = 'ssr' + (++count);
 
     var offset, $rail, $topOffset, $bottomOffset, $bottomGap, topOffsetHeight;
@@ -41,12 +41,13 @@
       offset = $elem.offset();
 
       $rail = $(
-        '<div id="' + railId +
-        '" class="' + options.railClass + '" style="overflow:hidden;position:fixed;padding:1px;bottom:0;"></div>');
+          '<div id="' + railId +
+          '" class="' + options.railClass +
+          '" style="overflow:hidden;position:fixed;padding:1px;bottom:0;pointer-events:none;"></div>');
 
-      $topOffset = $('<div class="top-offset" style="margin:0;padding:0;"></div>');
-      $bottomOffset = $('<div class="bottom-offset" style="margin:0;padding:0;"></div>');
-      $bottomGap = $('<div class="bottom-gap" style="margin:0;padding:0;"></div>');
+      $topOffset = $('<div class="top-offset" style="margin:0;padding:0;pointer-events:none;"></div>');
+      $bottomOffset = $('<div class="bottom-offset" style="margin:0;padding:0;pointer-events:none;"></div>');
+      $bottomGap = $('<div class="bottom-gap" style="margin:0;padding:0;pointer-events:none;"></div>');
 
       $rail.css({left: offset.left+'px'});
 
@@ -86,7 +87,7 @@
       }
 
       var mustBottomOffsetBeHidden = !options.saveBottomOffset &&
-        $body.height() - $window.height() - scrollTop > bottomOffsetHeight;
+          $body.height() - $window.height() - scrollTop > bottomOffsetHeight;
 
       if (mustBottomOffsetBeHidden) {
         $bottomOffset.hide();
