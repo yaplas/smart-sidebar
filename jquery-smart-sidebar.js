@@ -71,6 +71,9 @@
     }
 
     function scrollHandler(){
+      if (!$rail) {
+        return;
+      }
       if (!exists()) {
         return $window.off('scroll', scrollHandler);
       }
