@@ -26,16 +26,20 @@
 
     var offset, $rail, $topOffset, $bottomOffset, $bottomGap, topOffsetHeight;
 
-    mount();
-
-    waitForContent(200);
+    init(50);
 
     $window.on('scroll', scrollHandler);
     $window.on('resize', debounce(function(){
       unmount();
-      mount();
-      waitForContent(1);
+      init(1)
     }, 500));
+
+    function init(times) {
+      setTimeout(function(){
+        mount();
+        waitForContent(times);
+      }, 10);
+    }
 
     function mount() {
       offset = $elem.offset();
