@@ -34,6 +34,11 @@
       init(1)
     }, 500));
 
+    function setTopOffsetHeight() {
+      topOffsetHeight = Math.max(offset.top - parseInt($rail.css('top')) - parseInt($rail.css('margin-top')) , 0);
+      $topOffset.css({ height: topOffsetHeight + 'px' });
+    }
+
     function init(times) {
       setTimeout(function(){
         mount();
@@ -57,8 +62,7 @@
 
       $elem.before($rail);
 
-      topOffsetHeight = Math.max(offset.top - parseInt($rail.css('top')), 0);
-      $topOffset.css({ height: topOffsetHeight + 'px' });
+      setTopOffsetHeight();
 
       $rail.append($topOffset);
       $rail.append($elem);
@@ -77,13 +81,15 @@
       if (!exists()) {
         return $window.off('scroll', scrollHandler);
       }
+
+      setTopOffsetHeight();
+
       scrollHandler.lastScrollTop = scrollHandler.lastScrollTop || 0;
       var bottomOffsetHeight = $bottomOffset.height();
       var scrollTop = $window.scrollTop();
       var diff = scrollTop - scrollHandler.lastScrollTop;
       var scroll = $rail.scrollTop() + diff;
       scrollHandler.lastScrollTop = scrollTop;
-
 
       if (scroll < topOffsetHeight) {
         if (scrollTop < topOffsetHeight) {
