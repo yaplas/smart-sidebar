@@ -14,7 +14,7 @@ $('#your-sidebar-element').smartSidebar();
 
 ###You can define the position by css:
 
-#If the header and footer are always visibles:
+If the header and footer are always visibles:
 
 ```css
     .sidebar-rail {
@@ -23,7 +23,7 @@ $('#your-sidebar-element').smartSidebar();
     }
 ```
 
-#If the site header is always visible and the footer is on the end of scroll:
+If the site header is always visible and the footer is on the end of scroll:
 
 ```css
     .sidebar-rail {
@@ -34,7 +34,7 @@ $('#your-sidebar-element').smartSidebar();
     }
 ```
 
-#If the header is auto-hide sticky, and the footer is on the end of the scroll:
+If the header is auto-hide sticky, and the footer is on the end of the scroll:
 
 ```css
     .sidebar-rail .top-offset {
