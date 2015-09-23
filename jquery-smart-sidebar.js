@@ -16,7 +16,6 @@
 
     options = options || {};
     options.railClass = (options.railClass ? options.railClass + ' ' : '') + 'sidebar-rail';
-    options.saveBottomOffset = !!options.saveBottomOffset;
 
     var $window = $(window);
     var $body = $(window.document.body);
