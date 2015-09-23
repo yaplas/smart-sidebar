@@ -28,33 +28,34 @@
         $topOffset, $topGap, topOffsetHeight, topGapHeight,
         $bottomOffset, $bottomGap, bottomOffsetHeight, bottomGapHeight;
 
-    init(50);
 
-    $window.on('scroll', scrollHandler);
-    $window.on('resize', debounce(function(){
-      unmount();
-      init(1)
-    }, 500));
+    setTimeout(function(){
+      mount();
+      scrollHandler();
+      $window.on('scroll', scrollHandler);
+      $window.on('resize', debounce(function(){
+        unmount();
+        setTimeout(function(){
+          mount();
+          scrollHandler();
+        }, 10);
+      }, 500));
+    }, 10);
 
-    function setTopGap() {
+    // functions
+
+    function setGaps() {
+      //top
       topOffsetHeight = $topOffset.height();
       topGapHeight = Math.max(offset.top - topOffsetHeight,  0);
-      $topGap.css({ height: topGapHeight + 'px' });
-    }
+      $topGap.height(topGapHeight);
 
-    function setBottomGap() {
+      //bottom
       bottomOffsetHeight = $bottomOffset.height();
       railHeight = $rail.height();
+      $bottomGap.height(railHeight);
       elementHeight = $elem.outerHeight(true);
       bottomGapHeight = Math.max(railHeight - elementHeight - bottomOffsetHeight, 0);
-      $bottomGap.height(bottomGapHeight);
-    }
-
-    function init(times) {
-      setTimeout(function(){
-        mount();
-        waitForContent(times);
-      }, 10);
     }
 
     function mount() {
@@ -74,8 +75,7 @@
 
       $elem.before($rail);
 
-      setTopGap();
-      setBottomGap();
+      setGaps();
 
       $rail.append($topGap);
       $rail.append($topOffset);
@@ -89,11 +89,8 @@
     }
 
     function scrollHandler(){
-      if (!$rail) {
+      if (!$rail || !exists()) {
         return;
-      }
-      if (!exists()) {
-        return $window.off('scroll', scrollHandler);
       }
 
       lastScrollTop = lastScrollTop || 0;
@@ -102,8 +99,7 @@
       var scroll = $rail.scrollTop() + diff;
       lastScrollTop = scrollTop;
 
-      setTopGap();
-      setBottomGap();
+      setGaps();
 
       var topHeight = topOffsetHeight + topGapHeight;
 
@@ -132,19 +128,23 @@
         }
       }
 
+      // stop scrolling down after footer
+      if (remainingScroll < bottomOffsetHeight) {
+        var max = topGapHeight + topOffsetHeight + elementHeight + bottomOffsetHeight + bottomGapHeight - railHeight;
+        if (scroll > max) {
+          scroll = max;
+        }
+      }
+
       $rail.scrollTop(scroll);
     }
 
-    function waitForContent(times) {
-      times = times || 0;
-      if (times>=0 && exists()) {
-        scrollHandler();
-        setTimeout(function() { waitForContent(times-1); }, 100);
-      }
-    }
-
     function exists() {
-      return $('#'+railId).length;
+      if ($('#'+railId).length) {
+        return true;
+      }
+      $window.off('scroll', scrollHandler);
+      return false;
     }
 
     function debounce(func, milliseconds) {
