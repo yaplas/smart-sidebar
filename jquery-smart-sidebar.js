@@ -106,10 +106,16 @@
       setBottomGap();
 
       var topHeight = topOffsetHeight + topGapHeight;
+
+      if (scrollTop < topHeight) {
+        $rail.scrollTop((3*scroll+scrollTop)/4);
+        return;
+      }
+
       var remainingScroll = topHeight && $body.height() - $window.height() - scrollTop;
 
       // stop scrolling up leaving header space
-      if (scrollTop > topHeight && scroll < topGapHeight) {
+      if (scrollTop > topGapHeight && scroll < topGapHeight) {
         scroll = topGapHeight;
       }
 
