@@ -30,7 +30,7 @@ If the header and footer are always visibles:
     }
 ```
 
-If the site header is always visible and the footer is on the end of scroll:
+If the site header is sticky and the footer is on the end of scroll:
 
 ```css
     .sidebar-rail {
