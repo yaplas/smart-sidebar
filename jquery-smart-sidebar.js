@@ -108,7 +108,7 @@
       var topHeight = topOffsetHeight + topGapHeight;
 
       if (scrollTop < topHeight) {
-        $rail.scrollTop((3*scroll+scrollTop)/4);
+        $rail.scrollTop(scrollTop);
         return;
       }
 
