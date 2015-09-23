@@ -24,7 +24,10 @@
     $elem.data('SmartSidebar', true).css({'pointer-events':'all'});
     var railId = 'ssr' + (++count);
 
-    var offset, $rail, $topOffset, $bottomOffset, $bottomGap, topOffsetHeight;
+    var offset, lastScrollTop, elementHeight,
+        $rail, railHeight,
+        $topOffset, $topGap, topOffsetHeight, topGapHeight,
+        $bottomOffset, $bottomGap, bottomOffsetHeight, bottomGapHeight;
 
     init(50);
 
@@ -34,9 +37,18 @@
       init(1)
     }, 500));
 
-    function setTopOffsetHeight() {
-      topOffsetHeight = Math.max(offset.top - parseInt($rail.css('top')) - parseInt($rail.css('margin-top')) , 0);
-      $topOffset.css({ height: topOffsetHeight + 'px' });
+    function setTopGap() {
+      topOffsetHeight = $topOffset.height();
+      topGapHeight = Math.max(offset.top - topOffsetHeight,  0);
+      $topGap.css({ height: topGapHeight + 'px' });
+    }
+
+    function setBottomGap() {
+      bottomOffsetHeight = $bottomOffset.height();
+      railHeight = $rail.height();
+      elementHeight = $elem.outerHeight(true);
+      bottomGapHeight = Math.max(railHeight - elementHeight - bottomOffsetHeight, 0);
+      $bottomGap.height(bottomGapHeight);
     }
 
     function init(times) {
@@ -52,8 +64,9 @@
       $rail = $(
           '<div id="' + railId +
           '" class="' + options.railClass +
-          '" style="overflow:hidden;position:fixed;padding:1px;bottom:0;pointer-events:none;"></div>');
+          '" style="overflow:hidden;position:fixed;padding:1px;top:0;bottom:0;pointer-events:none;"></div>');
 
+      $topGap = $('<div class="top-gap" style="margin:0;padding:0;pointer-events:none;"></div>');
       $topOffset = $('<div class="top-offset" style="margin:0;padding:0;pointer-events:none;"></div>');
       $bottomOffset = $('<div class="bottom-offset" style="margin:0;padding:0;pointer-events:none;"></div>');
       $bottomGap = $('<div class="bottom-gap" style="margin:0;padding:0;pointer-events:none;"></div>');
@@ -62,8 +75,10 @@
 
       $elem.before($rail);
 
-      setTopOffsetHeight();
+      setTopGap();
+      setBottomGap();
 
+      $rail.append($topGap);
       $rail.append($topOffset);
       $rail.append($elem);
       $rail.append($bottomOffset);
@@ -82,32 +97,34 @@
         return $window.off('scroll', scrollHandler);
       }
 
-      setTopOffsetHeight();
-
-      scrollHandler.lastScrollTop = scrollHandler.lastScrollTop || 0;
-      var bottomOffsetHeight = $bottomOffset.height();
+      lastScrollTop = lastScrollTop || 0;
       var scrollTop = $window.scrollTop();
-      var diff = scrollTop - scrollHandler.lastScrollTop;
+      var diff = scrollTop - lastScrollTop;
       var scroll = $rail.scrollTop() + diff;
-      scrollHandler.lastScrollTop = scrollTop;
+      lastScrollTop = scrollTop;
 
-      if (scroll < topOffsetHeight) {
-        if (scrollTop < topOffsetHeight) {
-          scroll = scrollTop
-        } else {
-          scroll = topOffsetHeight;
-        }
+      setTopGap();
+      setBottomGap();
+
+      var topHeight = topOffsetHeight + topGapHeight;
+      var remainingScroll = topHeight && $body.height() - $window.height() - scrollTop;
+
+      // stop scrolling up leaving header space
+      if (scrollTop > topHeight && scroll < topGapHeight) {
+        scroll = topGapHeight;
       }
 
-      var mustBottomOffsetBeHidden = !options.saveBottomOffset &&
-          $body.height() - $window.height() - scrollTop > bottomOffsetHeight;
+      // stop scrolling down when element is on top of the page
+      if (scrollTop > topHeight && scroll > topHeight && remainingScroll > bottomOffsetHeight && elementHeight < railHeight) {
+        scroll = topHeight;
+      }
 
-      if (mustBottomOffsetBeHidden) {
-        $bottomOffset.hide();
-        $bottomGap.css({ height: ($rail.height() - $elem.outerHeight(true)) + 'px' });
-      } else {
-        $bottomOffset.show();
-        $bottomGap.css({ height: ($rail.height() - $elem.outerHeight(true) - bottomOffsetHeight) + 'px' });
+      // stop scrolling down waiting for footer
+      if (scroll > topHeight && remainingScroll > bottomOffsetHeight) {
+        var max = topGapHeight + topOffsetHeight + elementHeight - railHeight;
+        if (scroll > max) {
+          scroll = max;
+        }
       }
 
       $rail.scrollTop(scroll);
