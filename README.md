@@ -21,7 +21,7 @@ $('#your-sidebar-element').smartSidebar();
 
 ###You can define the position by css:
 
-If the header and footer are always visibles:
+If the header and footer are sticky and always visibles:
 
 ```css
     .sidebar-rail {
