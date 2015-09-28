@@ -29,66 +29,19 @@
         $bottomOffset, $bottomGap, bottomOffsetHeight, bottomGapHeight;
 
 
-    setTimeout(function(){
-      mount();
-      scrollHandler();
-      $window.on('scroll', scrollHandler);
-      $window.on('resize', debounce(function(){
-        unmount();
-        setTimeout(function(){
-          mount();
-          scrollHandler();
-        }, 10);
-      }, 500));
-    }, 10);
+    var resizeHandler = debounce(function(){
+      if (!$rail || !exists()) {
+        return;
+      }
 
-    // functions
+      unmount();
+      setTimeout(function(){
+        mount();
+        scrollHandler();
+      }, 10);
+    }, 500);
 
-    function setGaps() {
-      //top
-      topOffsetHeight = $topOffset.height();
-      topGapHeight = Math.max(offset.top - topOffsetHeight,  0);
-      $topGap.height(topGapHeight);
-
-      //bottom
-      bottomOffsetHeight = $bottomOffset.height();
-      railHeight = $rail.height();
-      $bottomGap.height(railHeight);
-      elementHeight = $elem.outerHeight(true);
-      bottomGapHeight = Math.max(railHeight - elementHeight - bottomOffsetHeight, 0);
-    }
-
-    function mount() {
-      offset = $elem.offset();
-
-      $rail = $(
-          '<div id="' + railId +
-          '" class="' + options.railClass +
-          '" style="overflow:hidden;position:fixed;padding:1px;top:0;bottom:0;pointer-events:none;"></div>');
-
-      $topGap = $('<div class="top-gap" style="margin:0;padding:0;pointer-events:none;"></div>');
-      $topOffset = $('<div class="top-offset" style="margin:0;padding:0;pointer-events:none;"></div>');
-      $bottomOffset = $('<div class="bottom-offset" style="margin:0;padding:0;pointer-events:none;"></div>');
-      $bottomGap = $('<div class="bottom-gap" style="margin:0;padding:0;pointer-events:none;"></div>');
-
-      $rail.css({left: offset.left+'px'});
-
-      $elem.before($rail);
-
-      setGaps();
-
-      $rail.append($topGap);
-      $rail.append($topOffset);
-      $rail.append($elem);
-      $rail.append($bottomOffset);
-      $rail.append($bottomGap);
-    }
-
-    function unmount() {
-      $rail.replaceWith($elem);
-    }
-
-    function scrollHandler(){
+    var scrollHandler = function(){
       if (!$rail || !exists()) {
         return;
       }
@@ -137,6 +90,59 @@
       }
 
       $rail.scrollTop(scroll);
+    };
+
+    setTimeout(function(){
+      mount();
+      scrollHandler();
+      $window.on('scroll', scrollHandler);
+      $window.on('resize', resizeHandler);
+    }, 10);
+
+    // functions
+
+    function setGaps() {
+      //top
+      topOffsetHeight = $topOffset.height();
+      topGapHeight = Math.max(offset.top - topOffsetHeight,  0);
+      $topGap.height(topGapHeight);
+
+      //bottom
+      bottomOffsetHeight = $bottomOffset.height();
+      railHeight = $rail.height();
+      $bottomGap.height(railHeight);
+      elementHeight = $elem.outerHeight(true);
+      bottomGapHeight = Math.max(railHeight - elementHeight - bottomOffsetHeight, 0);
+    }
+
+    function mount() {
+      offset = $elem.offset();
+
+      $rail = $(
+          '<div id="' + railId +
+          '" class="' + options.railClass +
+          '" style="overflow:hidden;position:fixed;padding:1px;top:0;bottom:0;pointer-events:none;"></div>');
+
+      $topGap = $('<div class="top-gap" style="margin:0;padding:0;pointer-events:none;"></div>');
+      $topOffset = $('<div class="top-offset" style="margin:0;padding:0;pointer-events:none;"></div>');
+      $bottomOffset = $('<div class="bottom-offset" style="margin:0;padding:0;pointer-events:none;"></div>');
+      $bottomGap = $('<div class="bottom-gap" style="margin:0;padding:0;pointer-events:none;"></div>');
+
+      $rail.css({left: offset.left+'px'});
+
+      $elem.before($rail);
+
+      setGaps();
+
+      $rail.append($topGap);
+      $rail.append($topOffset);
+      $rail.append($elem);
+      $rail.append($bottomOffset);
+      $rail.append($bottomGap);
+    }
+
+    function unmount() {
+      $rail.replaceWith($elem);
     }
 
     function exists() {
@@ -144,6 +150,7 @@
         return true;
       }
       $window.off('scroll', scrollHandler);
+      $window.off('resize', resizeHandler);
       return false;
     }
 
