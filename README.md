@@ -8,11 +8,11 @@ Install
 ==========================
 
 ```
-bower install smart-sticky-header
+bower install smart-sidebar
 ```
 
 ```
-npm install smart-sticky-header
+npm install smart-sidebar
 ```
 
 Usage
